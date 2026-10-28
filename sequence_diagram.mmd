@@ -1,0 +1,64 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'fontSize': '20px', 'fontFamily': 'arial'}}}%%
+sequenceDiagram
+    autonumber
+    actor Driver
+    participant Auth as AuthController
+    participant API as ApiController
+    participant Ops as OperationsController
+    participant DB as Database
+    actor Admin
+
+    %% Phase 1: Driver Registration & Application
+    rect rgb(232, 240, 254)
+    note right of Driver: Driver Application Phase
+    Driver->>Auth: POST /api/auth/register (Driver Details)
+    Auth->>DB: Save User (Role: DRIVER)
+    Auth-->>Driver: Returns 200 OK & JWT Token
+    
+    Driver->>API: POST /addBiketaxi (Application Details)
+    API->>DB: Save Biketaxi (Status: DRAFT)
+    API-->>Driver: Returns 200 OK
+    
+    Driver->>Ops: POST /api/operations/vehicles/{id}
+    Ops->>DB: Save Vehicle (Linked to Biketaxi)
+    Ops-->>Driver: Returns 200 OK
+    
+    Driver->>Ops: POST /api/operations/documents/{id}
+    Ops->>DB: Save Document Metadata
+    Ops-->>Driver: Returns 200 OK
+    end
+
+    %% Phase 2: Admin Verification & Approval
+    rect rgb(252, 232, 230)
+    note left of Admin: Admin Verification Phase
+    Admin->>Auth: POST /api/auth/login (Admin Credentials)
+    Auth-->>Admin: Returns 200 OK & Admin JWT Token
+    
+    Admin->>API: GET /getAllBiketaxi
+    API->>DB: Fetch all Applications
+    DB-->>API: List of Applications
+    API-->>Admin: Returns JSON array of Applications
+    
+    Admin->>Ops: POST /api/operations/background-checks/{id}
+    Ops->>DB: Save BackgroundCheck (Status: INITIATED)
+    Ops-->>Admin: Returns 200 OK
+    
+    Admin->>Ops: PUT /api/operations/documents/{id}/verify
+    Ops->>DB: Update Document (Status: VERIFIED, VerifiedBy: Admin)
+    Ops-->>Admin: Returns 200 OK
+    
+    Admin->>API: PUT /api/biketaxi/{id}/status?status=APPROVED
+    API->>DB: Update Biketaxi Status to APPROVED
+    API->>DB: Trigger AuditLog Creation
+    API->>DB: Trigger Notification Creation (To Driver)
+    API-->>Admin: Returns 200 OK
+    end
+
+    %% Phase 3: Driver Checks Status
+    rect rgb(234, 243, 224)
+    note right of Driver: Final Status Check
+    Driver->>API: GET /getAllBiketaxi (Using Driver JWT)
+    API->>DB: Fetch applications where user_id = driver_id
+    DB-->>API: Returns Driver's Application
+    API-->>Driver: Returns Application JSON (Status: APPROVED)
+    end

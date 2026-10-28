@@ -1,0 +1,168 @@
+classDiagram
+    direction LR
+
+    class AuthController {
+        <<RestController>>
+        +register()
+        +login()
+    }
+
+    class ApiController {
+        <<RestController>>
+        +addBiketaxi()
+        +getAllBiketaxi()
+        +getBiketaxiById()
+        +updateApplicationStatus()
+        +getBiketaxisByStatus()
+    }
+
+    class OperationsController {
+        <<RestController>>
+        +registerVehicle()
+        +uploadDocument()
+        +verifyDocument()
+        +initiateCheck()
+        +updateCheckStatus()
+        +getMyPerformance()
+        +getMyUnreadNotifications()
+    }
+
+    class BiketaxiService {
+        <<Service>>
+        +addBiketaxi()
+        +getAllBiketaxi()
+        +getBiketaxiById()
+        +updateApplicationStatus()
+        +getBiketaxisByStatus()
+        +getBiketaxisByUserId()
+    }
+
+    class OperationsService {
+        <<Service>>
+        +registerVehicle()
+        +uploadDocumentMetadata()
+        +verifyDocument()
+        +initiateBackgroundCheck()
+        +updateBackgroundCheckStatus()
+        +getMyPerformance()
+        +getMyUnreadNotifications()
+    }
+
+    class User {
+        -int id
+        -String username
+        -String email
+        -String passwordHash
+        -String phoneNumber
+        -Role role
+        -boolean isActive
+        +getAuthorities()
+        +isAccountNonLocked()
+        +isEnabled()
+    }
+
+    class Biketaxi {
+        -int id
+        -String name
+        -String bikeNumber
+        -int age
+        -String phoneNumber
+        -String address
+        -String drivingLicenseNumber
+        -DriverApplicationStatus status
+        -Timestamp submissionDate
+        -Timestamp lastModified
+    }
+
+    class Vehicle {
+        -int id
+        -String registrationNumber
+        -String make
+        -String model
+        -int yearOfManufacture
+        -String insurancePolicyNumber
+        -Date insuranceExpiryDate
+        -String vehicleCondition
+    }
+
+    class Document {
+        -int id
+        -String documentType
+        -String fileName
+        -long fileSize
+        -String filePath
+        -VerificationStatus verificationStatus
+        -Timestamp verificationDate
+    }
+
+    class BackgroundCheck {
+        -int id
+        -String checkType
+        -String verificationAgency
+        -CheckStatus status
+        -CheckResult result
+        -Timestamp initiatedDate
+        -Timestamp completionDate
+    }
+
+    class DriverPerformance {
+        -int id
+        -int totalRides
+        -int completedRides
+        -int cancelledRides
+        -BigDecimal averageRating
+        -BigDecimal totalEarnings
+        -int performanceScore
+        -DriverStatus status
+    }
+
+    class Notification {
+        -int id
+        -String title
+        -String message
+        -NotificationType type
+        -boolean isRead
+        -Timestamp createdDate
+    }
+
+    class AuditLog {
+        -int id
+        -String action
+        -String entityType
+        -int entityId
+        -String oldValues
+        -String newValues
+        -Timestamp timestamp
+    }
+
+    AuthController ..> User
+    ApiController ..> BiketaxiService
+    OperationsController ..> OperationsService
+    BiketaxiService ..> Biketaxi
+    OperationsService ..> Vehicle
+    OperationsService ..> Document
+    OperationsService ..> BackgroundCheck
+    OperationsService ..> DriverPerformance
+    OperationsService ..> Notification
+
+    User "1" --> "*" Biketaxi
+    User "1" --> "1" DriverPerformance
+    User "1" --> "*" Notification
+    User "1" --> "*" AuditLog
+    Biketaxi "1" --> "1" Vehicle
+    Biketaxi "1" --> "*" Document
+    Biketaxi "1" --> "*" BackgroundCheck
+
+    style AuthController fill:#4A90D9,stroke:#2C5F8A,color:#fff
+    style ApiController fill:#4A90D9,stroke:#2C5F8A,color:#fff
+    style OperationsController fill:#4A90D9,stroke:#2C5F8A,color:#fff
+    style BiketaxiService fill:#F5A623,stroke:#C47D0E,color:#fff
+    style OperationsService fill:#F5A623,stroke:#C47D0E,color:#fff
+    style User fill:#7ED321,stroke:#5A9A18,color:#fff
+    style Biketaxi fill:#7ED321,stroke:#5A9A18,color:#fff
+    style Vehicle fill:#7ED321,stroke:#5A9A18,color:#fff
+    style Document fill:#7ED321,stroke:#5A9A18,color:#fff
+    style BackgroundCheck fill:#7ED321,stroke:#5A9A18,color:#fff
+    style DriverPerformance fill:#7ED321,stroke:#5A9A18,color:#fff
+    style Notification fill:#7ED321,stroke:#5A9A18,color:#fff
+    style AuditLog fill:#7ED321,stroke:#5A9A18,color:#fff

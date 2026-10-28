@@ -1,0 +1,93 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'fontSize': '20px', 'fontFamily': 'arial', 'primaryColor': '#D9E8F5', 'primaryBorderColor': '#4C84C3'}}}%%
+classDiagram
+    direction TB
+
+    namespace Controllers {
+        class AuthController {
+            <<RestController>>
+            +register()
+            +login()
+        }
+
+        class ApiController {
+            <<RestController>>
+            +addBiketaxi()
+            +getAllBiketaxi()
+            +getBiketaxiById()
+            +updateApplicationStatus()
+            +getBiketaxisByStatus()
+        }
+
+        class OperationsController {
+            <<RestController>>
+            +registerVehicle()
+            +uploadDocument()
+            +verifyDocument()
+            +initiateCheck()
+            +updateCheckStatus()
+            +getMyPerformance()
+            +getMyUnreadNotifications()
+        }
+    }
+
+    namespace Database_Entities {
+        class User {
+            -int id
+            -String username
+            -String email
+            -String password
+            -String role
+            -boolean isActive
+        }
+
+        class Biketaxi {
+            -int id
+            -String name
+            -String bikeNumber
+            -String status
+            -Timestamp submissionDate
+        }
+
+        class Vehicle {
+            -int id
+            -String registrationNumber
+            -String make
+            -String model
+            -String vehicleCondition
+        }
+
+        class Document {
+            -int id
+            -String documentType
+            -String verificationStatus
+            -Timestamp uploadDate
+        }
+
+        class BackgroundCheck {
+            -int id
+            -String checkType
+            -String status
+            -String result
+        }
+
+        class DriverPerformance {
+            -int id
+            -int totalRides
+            -BigDecimal averageRating
+            -BigDecimal totalEarnings
+        }
+
+        class Notification {
+            -int id
+            -String title
+            -String message
+            -boolean isRead
+        }
+
+        class AuditLog {
+            -int id
+            -String action
+            -String entityType
+            -Timestamp timestamp
+        }
+    }

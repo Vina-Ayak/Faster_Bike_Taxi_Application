@@ -1,0 +1,11 @@
+{
+  "name": "faster-bike-taxi-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Faster Bike Taxi Application - Operations & Driver Onboarding Platform",
+  "scripts": {
+    "build": "npm --prefix reactapp run build",
+    "start": "npm --prefix reactapp start",
+    "test": "npm --prefix reactapp test"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "buildCommand": "npm --prefix reactapp run build",
+  "outputDirectory": "reactapp/build",
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/getAllBiketaxi",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/addBiketaxi",
+      "dest": "/api/index.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

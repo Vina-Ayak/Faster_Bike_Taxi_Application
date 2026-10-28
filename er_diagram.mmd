@@ -1,0 +1,105 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff'}}}%%
+flowchart LR
+    %% Define Styling and Shapes to match the image
+    classDef entity fill:#D9E8F5,stroke:#4C84C3,stroke-width:2px,color:#000,shape:rect;
+    classDef attribute fill:#FFFFFF,stroke:#A0A0A0,stroke-width:1px,color:#000,shape:pill;
+    classDef relation fill:#FDEAD2,stroke:#D98B2A,stroke-width:2px,color:#000,shape:diamond;
+
+    %% Make all connecting lines blue
+    linkStyle default stroke:#4C84C3,stroke-width:1.5px;
+
+    %% Entities (Rectangles)
+    U[USER]:::entity
+    B[DRIVER APPLICATION]:::entity
+    V[VEHICLE]:::entity
+    D[DOCUMENT]:::entity
+    BC[BACKGROUND CHECK]:::entity
+    DP[DRIVER PERFORMANCE]:::entity
+    N[NOTIFICATION]:::entity
+    AL[AUDIT LOG]:::entity
+
+    %% Relationships (Diamonds)
+    R1{Submits}:::relation
+    R2{Has}:::relation
+    R3{Uploads}:::relation
+    R4{Undergoes}:::relation
+    R5{Achieves}:::relation
+    R6{Receives}:::relation
+    R7{Generates}:::relation
+
+    %% Core Connections
+    U ---|N| R1 ---|1| B
+    B ---|1| R2 ---|1| V
+    B ---|1| R3 ---|N| D
+    B ---|1| R4 ---|N| BC
+    U ---|1| R5 ---|1| DP
+    U ---|1| R6 ---|N| N
+    U ---|1| R7 ---|N| AL
+
+    %% Attributes for USER
+    U_id([userid]):::attribute
+    U_name([username]):::attribute
+    U_email([email]):::attribute
+    U_role([role]):::attribute
+    U --- U_id
+    U --- U_name
+    U --- U_email
+    U --- U_role
+
+    %% Attributes for DRIVER APPLICATION
+    B_id([applicationId]):::attribute
+    B_status([status]):::attribute
+    B_sub([submissionDate]):::attribute
+    B_ver([verificationDate]):::attribute
+    B --- B_id
+    B --- B_status
+    B --- B_sub
+    B --- B_ver
+
+    %% Attributes for VEHICLE
+    V_id([vehicleId]):::attribute
+    V_reg([registrationNumber]):::attribute
+    V_make([make/model]):::attribute
+    V --- V_id
+    V --- V_reg
+    V --- V_make
+
+    %% Attributes for DOCUMENT
+    D_id([documentId]):::attribute
+    D_type([documentType]):::attribute
+    D_status([verificationStatus]):::attribute
+    D --- D_id
+    D --- D_type
+    D --- D_status
+
+    %% Attributes for BACKGROUND CHECK
+    BC_id([checkId]):::attribute
+    BC_type([checkType]):::attribute
+    BC_res([result]):::attribute
+    BC --- BC_id
+    BC --- BC_type
+    BC --- BC_res
+
+    %% Attributes for DRIVER PERFORMANCE
+    DP_id([performanceId]):::attribute
+    DP_rating([averageRating]):::attribute
+    DP_earn([totalEarnings]):::attribute
+    DP --- DP_id
+    DP --- DP_rating
+    DP --- DP_earn
+
+    %% Attributes for NOTIFICATION
+    N_id([notificationId]):::attribute
+    N_msg([message]):::attribute
+    N_read([isRead]):::attribute
+    N --- N_id
+    N --- N_msg
+    N --- N_read
+
+    %% Attributes for AUDIT LOG
+    AL_id([logId]):::attribute
+    AL_act([action]):::attribute
+    AL_time([timestamp]):::attribute
+    AL --- AL_id
+    AL --- AL_act
+    AL --- AL_time

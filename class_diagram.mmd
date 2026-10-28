@@ -1,0 +1,109 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'fontSize': '20px', 'fontFamily': 'arial', 'primaryColor': '#D9E8F5', 'primaryBorderColor': '#4C84C3', 'lineColor': '#4C84C3'}}}%%
+classDiagram
+    direction LR
+
+    %% Controllers
+    class AuthController {
+        <<RestController>>
+        +register(User user) ResponseEntity
+        +login(AuthRequest request) ResponseEntity
+    }
+
+    class ApiController {
+        <<RestController>>
+        +addBiketaxi(Biketaxi biketaxi) ResponseEntity
+        +getAllBiketaxi() ResponseEntity~List~
+        +getBiketaxiById(int id) ResponseEntity
+        +updateApplicationStatus(int id, Status status) ResponseEntity
+        +getBiketaxisByStatus(Status status) ResponseEntity~List~
+    }
+
+    class OperationsController {
+        <<RestController>>
+        +registerVehicle(int appId, Vehicle v) ResponseEntity
+        +uploadDocument(int appId, Document d) ResponseEntity
+        +verifyDocument(int docId) ResponseEntity
+        +initiateCheck(int appId, BackgroundCheck b) ResponseEntity
+        +updateCheckStatus(int checkId, Status s) ResponseEntity
+        +getMyPerformance() ResponseEntity
+        +getMyUnreadNotifications() ResponseEntity~List~
+    }
+
+    %% Models
+    class User {
+        -int id
+        -String username
+        -String email
+        -String password
+        -String role
+        -boolean isActive
+    }
+
+    class Biketaxi {
+        -int id
+        -String name
+        -String bikeNumber
+        -String status
+        -Timestamp submissionDate
+    }
+
+    class Vehicle {
+        -int id
+        -String registrationNumber
+        -String make
+        -String model
+        -String vehicleCondition
+    }
+
+    class Document {
+        -int id
+        -String documentType
+        -String verificationStatus
+        -Timestamp uploadDate
+    }
+
+    class BackgroundCheck {
+        -int id
+        -String checkType
+        -String status
+        -String result
+    }
+
+    class DriverPerformance {
+        -int id
+        -int totalRides
+        -BigDecimal averageRating
+        -BigDecimal totalEarnings
+    }
+
+    class Notification {
+        -int id
+        -String title
+        -String message
+        -boolean isRead
+    }
+
+    class AuditLog {
+        -int id
+        -String action
+        -String entityType
+        -Timestamp timestamp
+    }
+
+    %% Relationships
+    AuthController ..> User : "Manages Auth"
+    ApiController ..> Biketaxi : "Manages Applications"
+    OperationsController ..> Vehicle : "Handles Ops"
+    OperationsController ..> Document : "Handles Ops"
+    OperationsController ..> BackgroundCheck : "Handles Ops"
+    OperationsController ..> DriverPerformance : "Fetches Stats"
+    OperationsController ..> Notification : "Fetches Alerts"
+
+    User "1" <-- "*" Biketaxi : "Submits"
+    User "1" <-- "1" DriverPerformance : "Achieves"
+    User "1" <-- "*" Notification : "Receives"
+    User "1" <-- "*" AuditLog : "Generates"
+
+    Biketaxi "1" <-- "1" Vehicle : "Has"
+    Biketaxi "1" <-- "*" Document : "Uploads"
+    Biketaxi "1" <-- "*" BackgroundCheck : "Undergoes"
