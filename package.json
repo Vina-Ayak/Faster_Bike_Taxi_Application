@@ -4,6 +4,7 @@
   "private": true,
   "description": "Faster Bike Taxi Application - Operations & Driver Onboarding Platform",
   "scripts": {
+    "postinstall": "npm --prefix reactapp install",
     "build": "npm --prefix reactapp run build",
     "start": "npm --prefix reactapp start",
     "test": "npm --prefix reactapp test"
